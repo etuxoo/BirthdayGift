@@ -1,13 +1,21 @@
 ﻿using BirthdayGifts.Infra.Record;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BirthdayGifts.Infra.Repository
 {
     public class GiftRepo : IGiftRepository
     {
-        // TODO : Add DI for the connection
+        private readonly IDbConnection Connection = null;
+        private readonly ILogFacility<GiftRepo> Log = null;
+
+        public GiftRepo(IDbConnection conn, ILogFacility<GiftRepo> log)
+        {
+            Connection = conn;
+            Log = log;
+        }
 
         public IEnumerable<GiftRecord> Create(IEnumerable<GiftRecord> records)
         {

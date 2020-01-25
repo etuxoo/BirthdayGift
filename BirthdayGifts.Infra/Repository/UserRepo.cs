@@ -1,13 +1,22 @@
 ﻿using BirthdayGifts.Infra.Record;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace BirthdayGifts.Infra.Repository
 {
     public class UserRepo : IVoteRepository
     {
-        // TODO : Add DI for the connection
+        private readonly IDbConnection Connection = null;
+        private readonly ILogFacility<UserRepo> Log = null;
+
+        public UserRepo(IDbConnection conn, ILogFacility<UserRepo> log)
+        {
+            Connection = conn;
+            Log = log;
+        }
+
         public IEnumerable<VoteRecord> Create(IEnumerable<VoteRecord> records)
         {
             // TODO
