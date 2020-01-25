@@ -65,7 +65,7 @@ namespace BirthdayGifts.Infra.Repository
                 Validate(records);
 
                 var sql = @$"INSERT INTO Gifts (name)
-VALUES (@{nameof(GiftRecord.Name)};
+VALUES (@{nameof(GiftRecord.Name)})
 ";
 
                 Log.Trace("SQL statement prepared:");
@@ -120,6 +120,40 @@ FROM Gifts
             return result;
         }
 
+        public IEnumerable<GiftRecord> Read(IEnumerable<string> recordNames)
+        {
+            Log.Trace($"{nameof(GiftRepo)}.{nameof(Read)} has been invoked.");
+
+            Log.Trace("Preparing SQL statement...");
+
+            var sql = @"SELECT id, name
+FROM Gifts
+";
+
+            if (recordNames?.Any() ?? false)
+            {
+                var nameList = recordNames.Aggregate(string.Empty, (text, name) => text += $"'{name}',")
+                    .TrimEnd(',')
+                    .Replace(",", ", ")
+                ;
+
+                sql += $"WHERE name IN({nameList})";
+
+                Log.Debug($"{nameof(GiftRepo)}.{nameof(Read)}(id = {recordNames.Count()}) query start. ");
+            }
+
+            Log.Trace("SQL statement prepared:");
+            Log.Debug(sql);
+
+            var result = Connection.Query<GiftRecord>(sql);
+
+            Log.Debug($"{recordNames?.Count() ?? 0} gift records retrieved.");
+
+            Log.Trace($"{nameof(GiftRepo)}.{nameof(Read)} execution completed.");
+
+            return result;
+        }
+
         public int Update(IEnumerable<GiftRecord> records)
         {
             Log.Trace($"{nameof(GiftRepo)}.{nameof(Update)} has been invoked.");
@@ -136,8 +170,8 @@ FROM Gifts
             Log.Trace("Preparing SQL statement...");
 
             var sql = $@"UPDATE Gifts
-SET  custname = @{nameof(GiftRecord.Name)}
-WHERE custnum = @{nameof(GiftRecord.Name)}";
+SET  name = @{nameof(GiftRecord.Name)}
+WHERE id = @{nameof(GiftRecord.Id)}";
 
             Log.Trace("SQL statement prepared:");
             Log.Debug(sql);
@@ -162,8 +196,13 @@ WHERE custnum = @{nameof(GiftRecord.Name)}";
             if (recordIds != null)
             {
 
-                var sql = @$"DELETE FROM Gifts
-WHERE id = @{nameof(GiftRecord.Id)};";
+                var sql = "DELETE FROM Gifts";
+
+                var idList = recordIds.Aggregate(string.Empty, (text, id) => text += $"'{id}',")
+                        .TrimEnd(',')
+                        .Replace(",", ", ");
+
+                sql += $" WHERE id IN({idList})";
 
                 Log.Trace("SQL statement prepared:");
                 Log.Debug(sql);

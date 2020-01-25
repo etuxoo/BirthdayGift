@@ -9,6 +9,8 @@ namespace BirthdayGifts.Infra
        
         public IEnumerable<GiftRecord> Read(IEnumerable<int> recordIds);
 
+        public IEnumerable<GiftRecord> Read(IEnumerable<string> recordNames);
+
         public int Update(IEnumerable<GiftRecord> records);
 
         public int Delete(IEnumerable<int> recordIds);
