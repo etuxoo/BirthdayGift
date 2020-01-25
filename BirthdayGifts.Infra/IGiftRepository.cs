@@ -5,12 +5,12 @@ namespace BirthdayGifts.Infra
 {
     public interface IGiftRepository
     {
-        public IEnumerable<GiftRecord> Create(IEnumerable<GiftRecord> records);
+        public int Create(IEnumerable<GiftRecord> records);
        
-        public IEnumerable<GiftRecord> Read(IEnumerable<GiftRecord> records);
+        public IEnumerable<GiftRecord> Read(IEnumerable<int> recordIds);
 
-        public IEnumerable<GiftRecord> Update(IEnumerable<GiftRecord> records);
+        public int Update(IEnumerable<GiftRecord> records);
 
-        public IEnumerable<GiftRecord> Delete(IEnumerable<GiftRecord> records);
+        public int Delete(IEnumerable<int> recordIds);
     }
 }
