@@ -1,6 +1,6 @@
 ﻿namespace BirthdayGifts.Infra
 {
-    public class ConnectionStringProvider : IConnectnionStringProvider
+    public class ConnectionStringProvider : IConnectionStringProvider
     {
         public ConnectionStringProvider()
         {
