@@ -4,9 +4,9 @@ namespace BirthdayGifts.Infra.Record
 {
     public class UserRecord
     {
-        public DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public string Name { get; set; }
 

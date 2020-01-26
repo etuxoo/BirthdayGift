@@ -18,7 +18,7 @@ namespace BirthdayGifts.Infra.Repository
             Log = log;
         }
 
-        private void Validate(IEnumerable<GiftRecord> records, bool isUpdate=false)
+        private void Validate(IEnumerable<GiftRecord> records, bool isUpdate = false)
         {
             var allUnique = records.GroupBy(x => x.Name).All(g => g.Count() == 1);
 
@@ -30,19 +30,19 @@ namespace BirthdayGifts.Infra.Repository
 
             foreach (var record in records)
             {
-                if (record.Name==null)
+                if (record.Name == null)
                 {
                     Log.Error($"{nameof(GiftRecord)}.{nameof(GiftRecord.Name)} can't be null.");
                     throw new ArgumentException($"{nameof(GiftRecord)}.{nameof(GiftRecord.Name)} can't be null.");
                 }
-                if (record.Name.Length>32)
+                if (record.Name.Length > 32)
                 {
                     Log.Error($"{nameof(GiftRecord)}.{nameof(GiftRecord.Name)} should have 32 lenght or less.");
                     throw new ArgumentException($"{nameof(GiftRecord)}.{nameof(GiftRecord.Name)} should have 32 lenght or less.");
                 }
                 if (isUpdate)
                 {
-                    if (record.Id==null)
+                    if (record.Id == null)
                     {
                         Log.Error($"{nameof(GiftRecord)}.{nameof(GiftRecord.Id)} can't be null.");
                         throw new ArgumentException($"{nameof(GiftRecord)}.{nameof(GiftRecord.Id)} can't be null.");
@@ -86,7 +86,7 @@ VALUES (@{nameof(GiftRecord.Name)})
             return result;
         }
 
-        public IEnumerable<GiftRecord> Read(IEnumerable<int> recordIds=null)
+        public IEnumerable<GiftRecord> Read(IEnumerable<int> recordIds = null)
         {
             Log.Trace($"{nameof(GiftRepo)}.{nameof(Read)} has been invoked.");
 
@@ -139,11 +139,11 @@ FROM Gifts
 
                 sql += $"WHERE name IN({nameList})";
 
+                Log.Trace("SQL statement prepared:");
+                Log.Debug(sql);
+
                 Log.Debug($"{nameof(GiftRepo)}.{nameof(Read)}(id = {recordNames.Count()}) query start. ");
             }
-
-            Log.Trace("SQL statement prepared:");
-            Log.Debug(sql);
 
             var result = Connection.Query<GiftRecord>(sql);
 
@@ -165,7 +165,7 @@ FROM Gifts
                 throw new ArgumentException("No gifts to update.");
             }
 
-            Validate(records,true);
+            Validate(records, true);
 
             Log.Trace("Preparing SQL statement...");
 
