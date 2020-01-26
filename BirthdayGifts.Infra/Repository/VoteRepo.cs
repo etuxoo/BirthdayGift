@@ -17,27 +17,28 @@ namespace BirthdayGifts.Infra.Repository
             Log = log;
         }
 
-        public IEnumerable<VoteRecord> Create(IEnumerable<VoteRecord> records)
+        public int Create(IEnumerable<VoteRecord> records)
         {
-            // TODO
             throw new NotImplementedException();
         }
 
-        public IEnumerable<VoteRecord> Delete(IEnumerable<VoteRecord> records)
+        public int Delete(IEnumerable<int> recordIds)
         {
-            // TODO
             throw new NotImplementedException();
         }
 
-        public IEnumerable<VoteRecord> Read(IEnumerable<VoteRecord> records)
+        public IEnumerable<VoteRecord> Read(IEnumerable<int> recordIds)
         {
-            // TODO
             throw new NotImplementedException();
         }
 
-        public IEnumerable<VoteRecord> Update(IEnumerable<VoteRecord> records)
+        public IEnumerable<VoteRecord> Read(IEnumerable<string> recordNames)
         {
-            // TODO
+            throw new NotImplementedException();
+        }
+
+        public int Update(IEnumerable<VoteRecord> records)
+        {
             throw new NotImplementedException();
         }
     }

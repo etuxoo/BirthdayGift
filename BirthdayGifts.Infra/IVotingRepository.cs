@@ -5,12 +5,14 @@ namespace BirthdayGifts.Infra
 {
     public interface IVotingRepository
     {
-        public IEnumerable<VotingRecord> Create(IEnumerable<VotingRecord> records);
+        public int Create(IEnumerable<VotingRecord> records);
 
-        public IEnumerable<VotingRecord> Read(IEnumerable<VotingRecord> records);
+        public IEnumerable<VotingRecord> Read(IEnumerable<int> recordIds);
 
-        public IEnumerable<VotingRecord> Update(IEnumerable<VotingRecord> records);
+        public IEnumerable<VotingRecord> Read(IEnumerable<string> recordDates);
 
-        public IEnumerable<VotingRecord> Delete(IEnumerable<VotingRecord> records);
+        public int Update(IEnumerable<VotingRecord> records);
+
+        public int Delete(IEnumerable<int> recordIds);
     }
 }
