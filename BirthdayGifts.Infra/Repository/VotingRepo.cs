@@ -206,11 +206,10 @@ FROM Users
         {
             Log.Trace($"{nameof(VotingRepo)}.{nameof(Update)} has been invoked.");
 
-
             if (!records?.Any() ?? true)
             {
-                Log.Error($"No users to update.");
-                throw new ArgumentException("No users to update.");
+                Log.Error($"No votings to update.");
+                throw new ArgumentException("No votings to update.");
             }
 
             Validate(records, true);
