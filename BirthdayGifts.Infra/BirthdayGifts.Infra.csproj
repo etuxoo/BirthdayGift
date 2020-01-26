@@ -14,8 +14,4 @@
     <PackageReference Include="SimpleInjector" Version="4.9.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BirthdayGifts\BirthdayGifts.csproj" />
-  </ItemGroup>
-
 </Project>

@@ -14,6 +14,7 @@ namespace BirthdayGifts.Infra.Repository
 
         public GiftRepo(IDbConnection conn, ILogFacility<GiftRepo> log)
         {
+
             Connection = conn;
             Log = log;
         }

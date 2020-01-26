@@ -9,7 +9,10 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using BirthdayGifts.Data;
+using BirthdayGifts.Infra;
+using BirthdayGifts.Infra.Repository;
+using Dapper.FluentMap;
+using BirthdayGifts.Infra.Schema;
 
 namespace BirthdayGifts
 {
@@ -28,7 +31,7 @@ namespace BirthdayGifts
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton<LogedUserProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +47,11 @@ namespace BirthdayGifts
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            FluentMapper.Initialize(cfg => cfg.AddMap(new GiftSchema()));
+            FluentMapper.Initialize(cfg => cfg.AddMap(new UserSchema()));
+            FluentMapper.Initialize(cfg => cfg.AddMap(new VoteSchema()));
+            FluentMapper.Initialize(cfg => cfg.AddMap(new VotingSchema()));
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

@@ -3,7 +3,7 @@ using Dapper.FluentMap.Mapping;
 
 namespace BirthdayGifts.Infra.Schema
 {
-    public class VotingSchema : EntityMap<Record.VotingRecord> 
+    public class VotingSchema : EntityMap<VotingRecord> 
     {
         public VotingSchema()
         {

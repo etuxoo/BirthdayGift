@@ -1,15 +1,32 @@
 ﻿@inherits LayoutComponentBase
+@using MatBlazor
+@using BirthdayGifts.Pages
 
 <div class="sidebar">
     <NavMenu />
 </div>
 
 <div class="main">
-    <div class="top-row px-4">
-        <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+    <div class="top-row px-4 gradient-horizontal">
+        <MatButton Class="text-white rounded mx-2 px-3 nav-btn" OnClick="ToggleRegisterDialog">Register</MatButton>
+        <MatButton Class="text-white rounded mx-2 px-3 nav-btn">LogIn</MatButton>
     </div>
 
     <div class="content px-4">
         @Body
     </div>
 </div>
+@if (isRegisterDialogOpen)
+	{
+		 <RegisterDialog OnClose="ToggleRegisterDialog"></RegisterDialog>
+	}
+
+
+@code{
+    private bool isRegisterDialogOpen = false;
+
+    private void ToggleRegisterDialog()
+    {
+        isRegisterDialogOpen = !isRegisterDialogOpen;
+    }
+}
