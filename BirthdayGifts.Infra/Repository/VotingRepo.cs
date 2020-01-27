@@ -138,7 +138,7 @@ VALUES (@{nameof(VotingRecord.StartedBy)}, @{nameof(VotingRecord.IsOpen)}, @{nam
             Log.Trace("Preparing SQL statement...");
 
             var sql = @"SELECT *
-FROM Users
+FROM Votings
 ";
 
             if (recordIds?.Any() ?? false)
@@ -216,7 +216,7 @@ FROM Users
 
             Log.Trace("Preparing SQL statement...");
 
-            var sql = $@"UPDATE Users
+            var sql = $@"UPDATE Votings
 SET  startedBy = @{nameof(VotingRecord.StartedBy)} , isOpen = @{nameof(VotingRecord.IsOpen)}, date = @{nameof(VotingRecord.Date)}, userID = @{nameof(VotingRecord.UserId)}
 WHERE id = @{nameof(VotingRecord.Id)}";
 

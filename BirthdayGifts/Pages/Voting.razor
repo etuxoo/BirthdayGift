@@ -1,0 +1,78 @@
+﻿@page "/Voting"
+@using MatBlazor
+@using BirthdayGifts.Infra;
+@using BirthdayGifts.Infra.Record;
+@using BirthdayGifts.Infra.Repository;
+@using System.Data.SqlClient;
+@inject LogedUserProvider user
+
+<div class="content px-4 pages-bg center-items my-fluid">
+    @if (user.AutenticatedUser != null)
+    {
+        foreach (var item in records)
+        {
+            if (item.UserId != user.AutenticatedUser.Id && item.IsOpen == true)
+            {
+                <div>
+                    <SingleVoting Date="@item.Date.ToString()" votingId="@(item.Id ?? 0)" />
+                </div>
+                <MatButton Class="nav-btn text-white" OnClick="()=>CloseVoting(item.Id ?? 0)">Close</MatButton>
+            }
+        }
+    }
+    else
+    {
+        <MatH1 Class="text-white">Please LogIn</MatH1>
+
+    }
+</div>
+
+@code {
+    private IEnumerable<VotingRecord> records = null;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var cs = new ConnectionStringProvider();
+        using var connection = new SqlConnection(cs.ConnectionString);
+        connection.Open();
+        var logger = new SeriLogFacility<VotingRepo>(Serilog.Log.Logger);
+        var votingRepo = new VotingRepo(connection, logger);
+
+        try
+        {
+            records = votingRepo.Read();
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+    private void CloseVoting(int id)
+    {
+        var cs = new ConnectionStringProvider();
+        using var connection = new SqlConnection(cs.ConnectionString);
+        connection.Open();
+        var logger = new SeriLogFacility<VotingRepo>(Serilog.Log.Logger);
+        var votingRepo = new VotingRepo(connection, logger);
+
+        try
+        {
+            records = votingRepo.Read(new[] { id });
+        }
+        catch (Exception ex)
+        {
+        }
+
+        records.FirstOrDefault().IsOpen = false;
+
+        try
+        {
+            votingRepo.Update(new[] { records.FirstOrDefault() });
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+
+}

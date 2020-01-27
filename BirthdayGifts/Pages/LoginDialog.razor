@@ -4,31 +4,26 @@
 @using BirthdayGifts.Data;
 @using BirthdayGifts.Infra.Record;
 @using System.Data.SqlClient;
+@inject LogedUserProvider LogedUser;
 
 <MatDialog IsOpen="true" CanBeClosed="true">
     <MatDialogTitle Class="align-content-center text-white">
         <MatIconButton Class="close" Icon="clear" @onclick="()=>CloseCurrent()" tabindex="-1"></MatIconButton>
-        Register
+        LOGIN
     </MatDialogTitle>
-    <EditForm Model="@Credentials" OnValidSubmit="()=>Register()">
+    <EditForm Model="@Credentials" OnValidSubmit="()=>LogIn()">
         <MatDialogContent>
             <DataAnnotationsValidator />
             <ValidationSummary />
             <label>Username</label>
             <MatTextField TValue="string" @bind-Value="@Credentials.UserName"></MatTextField>
             <ValidationMessage For="@(() => Credentials.UserName)" />
-            <label>Name</label>
-            <MatTextField TValue="string" @bind-Value="Credentials.Name"></MatTextField>
-            <ValidationMessage For="@(() => Credentials.Name)" />
             <label>Password</label>
             <MatTextField Type="password" TValue="string" @bind-Value="Credentials.Password"></MatTextField>
             <ValidationMessage For="@(() => Credentials.Password)" />
-            <label>Birthdate</label>
-            <MatDatePicker @bind-Value="Credentials.BirthDate" Format="dd-MM-yy"></MatDatePicker>
-            <ValidationMessage For="@(() => Credentials.BirthDate)" />
         </MatDialogContent>
         <MatDialogActions Class="center-items">
-            <MatButton Type="submit" Class="nav-btn text-white">Register</MatButton>
+            <MatButton Type="submit" Class="nav-btn text-white">LOGIN</MatButton>
         </MatDialogActions>
     </EditForm>
 </MatDialog>
@@ -39,35 +34,40 @@
     private UserViewModel Credentials = new UserViewModel();
     private bool errorOcured = false;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Credentials.Name = "dummy";
+    }
+
     private void CloseCurrent()
     {
         OnClose.InvokeAsync(null);
     }
 
-    private void Register()
+    private void LogIn()
     {
         var cs = new ConnectionStringProvider();
         using var connection = new SqlConnection(cs.ConnectionString);
         connection.Open();
         var logger = new SeriLogFacility<UserRepo>(Serilog.Log.Logger);
         var userRepo = new UserRepo(connection, logger);
+        IEnumerable<UserRecord> records = new List<UserRecord>();
         try
         {
-            userRepo.Create(new[]
-        {
-            new UserRecord
-            {
-                BirthDate=Credentials.BirthDate.Date,
-                Name=Credentials.Name,
-                Password=Credentials.Password,
-                UserName=Credentials.UserName
-            }
-        });
+            records = userRepo.Read(new[] { Credentials.UserName });
         }
         catch (Exception ex)
         {
             errorOcured = true;
             Console.WriteLine(ex);
+        }
+        if (records.Count() > 0)
+        {
+            if (Credentials.Password == records.FirstOrDefault().Password)
+            {
+                LogedUser.AutenticatedUser = records.FirstOrDefault();
+                Console.WriteLine("logged");
+            }
         }
 
         CloseCurrent();

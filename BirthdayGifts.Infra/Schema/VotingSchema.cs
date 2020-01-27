@@ -7,8 +7,8 @@ namespace BirthdayGifts.Infra.Schema
     {
         public VotingSchema()
         {
-            Map(i => i.Id).ToColumn("id");
             Map(i => i.Date).ToColumn("date");
+            Map(i => i.Id).ToColumn("id");
             Map(i => i.IsOpen).ToColumn("isOpen");
             Map(i => i.StartedBy).ToColumn("startedBy");
             Map(i => i.UserId).ToColumn("userID");

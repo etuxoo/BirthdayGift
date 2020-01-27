@@ -1,6 +1,8 @@
 ﻿@inherits LayoutComponentBase
 @using MatBlazor
 @using BirthdayGifts.Pages
+@using BirthdayGifts.Infra
+@inject LogedUserProvider user
 
 <div class="sidebar">
     <NavMenu />
@@ -8,25 +10,45 @@
 
 <div class="main">
     <div class="top-row px-4 gradient-horizontal">
-        <MatButton Class="text-white rounded mx-2 px-3 nav-btn" OnClick="ToggleRegisterDialog">Register</MatButton>
-        <MatButton Class="text-white rounded mx-2 px-3 nav-btn">LogIn</MatButton>
+        @if (user.AutenticatedUser == null)
+        {
+            <MatButton Class="text-white rounded mx-2 px-3 nav-btn" OnClick="ToggleRegisterDialog">Register</MatButton>
+            <MatButton Class="text-white rounded mx-2 px-3 nav-btn" OnClick="ToggleLoginDIalog">LogIn</MatButton>
+        }
+        else
+        {
+            <MatButton Class="text-white rounded mx-2 px-3 nav-btn" OnClick="LogOut">LogOut</MatButton>
+        }
     </div>
 
-    <div class="content px-4">
-        @Body
-    </div>
+    @Body
 </div>
 @if (isRegisterDialogOpen)
-	{
-		 <RegisterDialog OnClose="ToggleRegisterDialog"></RegisterDialog>
-	}
+{
+    <RegisterDialog OnClose="ToggleRegisterDialog"></RegisterDialog>
+}
+@if (isLogInDialogOpen)
+{
+    <LoginDialog OnClose="ToggleLoginDIalog"></LoginDialog>
+}
 
 
 @code{
     private bool isRegisterDialogOpen = false;
+    private bool isLogInDialogOpen = false;
 
     private void ToggleRegisterDialog()
     {
         isRegisterDialogOpen = !isRegisterDialogOpen;
+    }
+
+    private void ToggleLoginDIalog()
+    {
+        isLogInDialogOpen = !isLogInDialogOpen;
+    }
+
+    private void LogOut()
+    {
+        user.AutenticatedUser = null;
     }
 }

@@ -19,11 +19,11 @@ namespace BirthdayGifts.Infra.Repository
             Log = log;
         }
 
-        private void Validate(IEnumerable<VoteRecord> records, bool IsUpdate=false)
+        private void Validate(IEnumerable<VoteRecord> records, bool IsUpdate = false)
         {
             foreach (var record in records)
             {
-                if (record.UserId==null)
+                if (record.UserId == null)
                 {
                     Log.Error($"{nameof(VoteRecord)}.{nameof(VoteRecord.UserId)} can't be null.");
                     throw new ArgumentException($"{nameof(VoteRecord)}.{nameof(VoteRecord.UserId)} can't be null.");
@@ -40,7 +40,7 @@ namespace BirthdayGifts.Infra.Repository
                 }
                 if (IsUpdate)
                 {
-                    if (record.Id==null)
+                    if (record.Id == null)
                     {
                         Log.Error($"{nameof(VoteRecord)}.{nameof(VoteRecord.Id)} can't be null.");
                         throw new ArgumentException($"{nameof(VoteRecord)}.{nameof(VoteRecord.Id)} can't be null.");
@@ -119,7 +119,7 @@ VALUES (@{nameof(VoteRecord.UserId)}, @{nameof(VoteRecord.GiftId)}, @{nameof(Vot
             return result;
         }
 
-        public IEnumerable<VoteRecord> Read(IEnumerable<int> recordIds=null)
+        public IEnumerable<VoteRecord> Read(IEnumerable<int> recordIds = null)
         {
             Log.Trace($"{nameof(VoteRepo)}.{nameof(Read)} has been invoked.");
 

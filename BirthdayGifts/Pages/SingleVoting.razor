@@ -1,0 +1,128 @@
+﻿@using MatBlazor;
+@using BirthdayGifts.Infra;
+@using BirthdayGifts.Infra.Record;
+@using BirthdayGifts.Infra.Repository;
+@using System.Data.SqlClient;
+@inject LogedUserProvider user
+
+<style>
+    label {
+        color: white;
+    }
+</style>
+
+<label class="text-white d-block">@Date</label>
+<label class="text-white d-block">You voted: @Vote</label>
+<MatRadioGroup @bind-Value="@Vote" @onmouseover="SaveVote">
+    <div class="d-inline-block">
+        <MatIcon Class="text-white">@MatIconNames.Arrow_forward</MatIcon>
+        <MatRadioButton Class="text-white" @onclick="SaveVote" Value="@VoteItems[0]">@VoteItems[0]</MatRadioButton>
+    </div>
+    <div class="d-inline-block">
+        <MatIcon Class="text-white">@MatIconNames.Arrow_forward</MatIcon>
+        <MatRadioButton Class="text-white" @onclick="SaveVote" Value="@VoteItems[1]">@VoteItems[0]</MatRadioButton>
+    </div>
+    <div class="d-inline-block">
+        <MatIcon Class="text-white">@MatIconNames.Arrow_forward</MatIcon>
+        <MatRadioButton Class="text-white" @onclick="SaveVote" Value="@VoteItems[2]">@VoteItems[2]</MatRadioButton>
+    </div>
+    <div class="d-inline-block">
+        <MatIcon Class="text-white">@MatIconNames.Arrow_forward</MatIcon>
+        <MatRadioButton Class="text-white" @onclick="SaveVote" Value="@VoteItems[3]">@VoteItems[3]</MatRadioButton>
+    </div>
+    <div class="d-inline-block">
+        <MatIcon Class="text-white">@MatIconNames.Arrow_forward</MatIcon>
+        <MatRadioButton Class="text-white" @onclick="SaveVote" Value="@VoteItems[4]">@VoteItems[4]</MatRadioButton>
+    </div>
+</MatRadioGroup>
+
+
+@code {
+    [Parameter] public string Date { get; set; }
+    [Parameter] public int votingId { get; set; }
+    protected string Vote = string.Empty;
+    protected string[] VoteItems = new[] { "Flowers", "Mug", "Plush toy", "Party", "Surprise box" };
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO : FIX it
+        //var cs = new ConnectionStringProvider();
+        //using var connection = new SqlConnection(cs.ConnectionString);
+        //connection.Open();
+        //var logger = new SeriLogFacility<GiftRepo>(Serilog.Log.Logger);
+        //var giftRepo = new GiftRepo(connection, logger);
+        //IEnumerable<GiftRecord> records = new List<GiftRecord>();
+
+        //try
+        //{
+        //    records = giftRepo.Read(new[] { 1, 2, 3, 4, 5 });
+        //}
+        //catch
+        //{
+        //}
+        //foreach (var item in records)
+        //{
+        //    VoteItems.Append<string>(item.Name);
+        //}
+    }
+
+    private void SaveVote()
+    {
+        var cs = new ConnectionStringProvider();
+        using var connection = new SqlConnection(cs.ConnectionString);
+        connection.Open();
+        var logger = new SeriLogFacility<VoteRepo>(Serilog.Log.Logger);
+        var VoteRepo = new VoteRepo(connection, logger);
+        var logger1 = new SeriLogFacility<GiftRepo>(Serilog.Log.Logger);
+        var giftRepo = new GiftRepo(connection, logger1);
+
+        var vote = new VoteRecord
+        {
+            GiftId = giftRepo.Read(new[] { Vote }).FirstOrDefault().Id,
+            UserId = user.AutenticatedUser.Id,
+            VotingId = votingId
+        };
+
+        IEnumerable<VoteRecord> records = new List<VoteRecord>();
+
+        try
+        {
+            records = VoteRepo.Read();
+        }
+        catch
+        {
+        }
+
+        bool cheker = false;
+
+        foreach (var record in records)
+        {
+            if (record == vote)
+            {
+                cheker = true;
+            }
+        }
+
+        if (!cheker)
+        {
+            try
+            {
+                VoteRepo.Create(new[] { vote });
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+        else
+        {
+            try
+            {
+                VoteRepo.Update(new[] { vote });
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+    }
+}
+
